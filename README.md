@@ -7,7 +7,7 @@ Libraries:
 - sklearn
 - matplotlib
 - pandas
--tkinter
+- tkinter
 
 Goals:
 - improve machine learning and statistics knowledge
