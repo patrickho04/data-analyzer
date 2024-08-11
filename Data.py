@@ -21,8 +21,6 @@ class Data():
         self.std_data = self.dataset.std()
         self.var_data = self.dataset.var()
 
-        # Quartiles?
-    
     # Basic Measure
     def min(self, column):
         return self.min_data.iloc[column]
