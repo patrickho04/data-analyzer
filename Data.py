@@ -54,8 +54,15 @@ class Data():
         return np.quantile(self.dataset.iloc[:, column], qt)
     
     # Single Variable vs. Result
-    def scatter_plot(self, column, title: str = '', xlabel: str = '', ylabel: str = ''):
+    def scatter_plot(self, column, title: str = '', xlabel: str = '', ylabel: str = '') -> None:
         plt.scatter(self.dataset.iloc[:, column], self.Y, color = 'red')
+        plt.title(title)    
+        plt.xlabel(xlabel)
+        plt.ylabel(ylabel)
+        plt.show()
+    
+    def line_chart(self, column, title: str = '', xlabel: str = '', ylabel: str = '') -> None:
+        plt.plot(self.dataset.iloc[:, column], self.Y, color = 'red')
         plt.title(title)    
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
@@ -83,3 +90,4 @@ print("Q2: " + str(test.quantile(0, 0.5)))
 print("Q3: " + str(test.quantile(0, 0.75)))
 
 test.scatter_plot(column=0)
+test.line_chart(column=0)
