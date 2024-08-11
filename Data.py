@@ -50,14 +50,16 @@ class Data():
     def var(self, column):
         return self.var_data.iloc[column]
     
-    # Quartiles?
+    # Quartile
+    def quantile(self, column, qt):
+        return np.quantile(self.dataset.iloc[:, column:column+1], qt)
 
 test = Data('Salary_Data.csv')
 
 print("Basic Measure")
 print("Min: " + str(test.min(0)))
 print("Max: " + str(test.max(0)))
-print("Mode: " + str(test.mode(1)))
+print("Mode: " + str(test.mode(0)))
 
 print("\nCentral Measure")
 print("Mean: " + str(test.mean(0)))
@@ -67,3 +69,8 @@ print("\nDispersion Measure")
 print("Range: " + str(test.range(0)))
 print("Standard Deviation: " + str(test.std(0)))
 print("Variance: " + str(test.var(0)))
+
+print("\nQuartile")
+print("Q1: " + str(test.quantile(0, 0.25)))
+print("Q2: " + str(test.quantile(0, 0.5)))
+print("Q3: " + str(test.quantile(0, 0.75)))
