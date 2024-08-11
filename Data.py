@@ -1,6 +1,7 @@
 # Importing the libraries
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 class Data():
     # Initizliaing input and output values of dataset
@@ -22,35 +23,43 @@ class Data():
         self.var_data = self.dataset.var()
 
     # Basic Measure
-    def min(self, column):
+    def min(self, column) -> float:
         return self.min_data.iloc[column]
     
-    def max(self, column):
+    def max(self, column) -> float:
         return self.max_data.iloc[column]
 
     # Central Measure
-    def mean(self, column):
+    def mean(self, column) -> float:
         return self.mean_data.iloc[column]
 
-    def mode(self, column):
+    def mode(self, column) -> float:
         return self.dataset.iloc[:, column].mode()[0]
 
-    def median(self, column):
+    def median(self, column) -> float:
         return self.median_data.iloc[column]
     
     # Dispersion Measure
-    def range(self, column):
+    def range(self, column) -> float:
         return self.max_data.iloc[column] - self.min_data.iloc[column]
     
-    def std(self, column):
+    def std(self, column) -> float:
         return self.std_data.iloc[column]
 
-    def var(self, column):
+    def var(self, column) -> float:
         return self.var_data.iloc[column]
     
     # Quartile
-    def quantile(self, column, qt):
-        return np.quantile(self.dataset.iloc[:, column:column+1], qt)
+    def quantile(self, column, qt) -> float:
+        return np.quantile(self.dataset.iloc[:, column], qt)
+    
+    # Single Variable vs. Result
+    def scatter_plot(self, column, title: str = '', xlabel: str = '', ylabel: str = ''):
+        plt.scatter(self.dataset.iloc[:, column], self.Y, color = 'red')
+        plt.title(title)    
+        plt.xlabel(xlabel)
+        plt.ylabel(ylabel)
+        plt.show()
 
 test = Data('Salary_Data.csv')
 
@@ -72,3 +81,5 @@ print("\nQuartile")
 print("Q1: " + str(test.quantile(0, 0.25)))
 print("Q2: " + str(test.quantile(0, 0.5)))
 print("Q3: " + str(test.quantile(0, 0.75)))
+
+test.scatter_plot(column=0)
