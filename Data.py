@@ -1,4 +1,5 @@
 # Importing the libraries
+from typing import List
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -54,21 +55,32 @@ class Data():
         return np.quantile(self.dataset.iloc[:, column], qt)
     
     # Single Variable vs. Result
-    def scatter_plot(self, column, title: str = '', xlabel: str = '', ylabel: str = '') -> None:
-        plt.scatter(self.dataset.iloc[:, column], self.Y, color = 'red')
+    def scatter_plot(self, columns: List[int], title: str = '', xlabel: str = '', ylabel: str = '', colors: List[str] = ['red']*99) -> None:    # list of cols and colors?
+        for i in range(len(columns)):
+            plt.scatter(self.dataset.iloc[:, columns[i]], self.Y, color=colors[i])
         plt.title(title)    
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
         plt.show()
     
-    def line_chart(self, column, title: str = '', xlabel: str = '', ylabel: str = '') -> None:
-        plt.plot(self.dataset.iloc[:, column], self.Y, color = 'red')
+    def line_chart(self, columns: List[int], title: str = '', xlabel: str = '', ylabel: str = '', colors: List[str] = ['red']*99) -> None:
+        for i in range(len(columns)):
+            plt.plot(self.dataset.iloc[:, columns[i]], self.Y, color=colors[i])
         plt.title(title)    
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
         plt.show()
 
-test = Data('Salary_Data.csv')
+    def bar(self):
+        pass
+
+    def histo(self):
+        pass
+
+    def box_plot(self):
+        pass
+
+test = Data('50_Startups.csv')
 
 print("Basic Measure")
 print("Min: " + str(test.min(0)))
@@ -89,5 +101,5 @@ print("Q1: " + str(test.quantile(0, 0.25)))
 print("Q2: " + str(test.quantile(0, 0.5)))
 print("Q3: " + str(test.quantile(0, 0.75)))
 
-test.scatter_plot(column=0)
-test.line_chart(column=0)
+test.scatter_plot(columns=[0, 1], colors=['red', 'blue'])
+test.line_chart(columns=[0, 1], colors=['red', 'blue'])
