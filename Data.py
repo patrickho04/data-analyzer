@@ -57,10 +57,15 @@ class Data():
     # Single Variable vs. Result
     def scatter_plot(self, columns: List[int], title: str = '', xlabel: str = '', ylabel: str = '', colors: List[str] = ['red']*99) -> None:
         if len(columns) > len(colors):
-            raise IndexError("Column and color length not equal")   
+            raise IndexError("Column and color length must be equal.")   
         
         for i in range(len(columns)):
+            if columns[i] >= len(self.X[0]):                                            # check if column listed in columns is an indpendent variable column        
+                raise IndexError("Column does not have independent variables.")
+            elif columns[i] < 0:                                                        # check if column exists
+                raise IndexError("Column does not exist.")
             plt.scatter(self.dataset.iloc[:, columns[i]], self.Y, color=colors[i])
+
         plt.title(title)    
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
@@ -68,23 +73,35 @@ class Data():
     
     def line_chart(self, columns: List[int], title: str = '', xlabel: str = '', ylabel: str = '', colors: List[str] = ['red']*99) -> None:
         if len(columns) > len(colors):
-            raise IndexError("Column and color length not equal")
+            raise IndexError("Column and color length must be equal.")
 
         for i in range(len(columns)):
+            if columns[i] >= len(self.X[0]):
+                raise IndexError("Column does not have independent variables.")
+            elif columns[i] < 0:
+                raise IndexError("Column does not exist.")
             plt.plot(self.dataset.iloc[:, columns[i]], self.Y, color=colors[i])
+
         plt.title(title)    
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
         plt.show()
 
-    def bar(self):
+    def bar(self) -> None:
         pass
 
-    def histo(self):
+    def hist(self) -> None:
         pass
 
-    def box_plot(self):
-        pass
+    def box_plot(self, column, title: str = '', xlabel: str = '', ylabel: str = '') -> None:
+        if column < 0 or column >= len(self.dataset):
+            raise IndexError("Column does not exist.")
+        
+        plt.boxplot(self.dataset.iloc[:, column])
+        plt.title(title)    
+        plt.xlabel(xlabel)
+        plt.ylabel(ylabel)
+        plt.show()
 
 test = Data('50_Startups.csv')
 
@@ -109,3 +126,4 @@ print("Q3: " + str(test.quantile(0, 0.75)))
 
 test.scatter_plot(columns=[0, 1, 2], colors=['red', 'blue', 'green'])
 test.line_chart(columns=[0, 1, 2], colors=['red', 'blue', 'green'])
+test.box_plot(column=0)
