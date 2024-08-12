@@ -55,7 +55,10 @@ class Data():
         return np.quantile(self.dataset.iloc[:, column], qt)
     
     # Single Variable vs. Result
-    def scatter_plot(self, columns: List[int], title: str = '', xlabel: str = '', ylabel: str = '', colors: List[str] = ['red']*99) -> None:    # list of cols and colors?
+    def scatter_plot(self, columns: List[int], title: str = '', xlabel: str = '', ylabel: str = '', colors: List[str] = ['red']*99) -> None:
+        if len(columns) > len(colors):
+            raise IndexError("Column and color length not equal")   
+        
         for i in range(len(columns)):
             plt.scatter(self.dataset.iloc[:, columns[i]], self.Y, color=colors[i])
         plt.title(title)    
@@ -64,6 +67,9 @@ class Data():
         plt.show()
     
     def line_chart(self, columns: List[int], title: str = '', xlabel: str = '', ylabel: str = '', colors: List[str] = ['red']*99) -> None:
+        if len(columns) > len(colors):
+            raise IndexError("Column and color length not equal")
+
         for i in range(len(columns)):
             plt.plot(self.dataset.iloc[:, columns[i]], self.Y, color=colors[i])
         plt.title(title)    
@@ -101,5 +107,5 @@ print("Q1: " + str(test.quantile(0, 0.25)))
 print("Q2: " + str(test.quantile(0, 0.5)))
 print("Q3: " + str(test.quantile(0, 0.75)))
 
-test.scatter_plot(columns=[0, 1], colors=['red', 'blue'])
-test.line_chart(columns=[0, 1], colors=['red', 'blue'])
+test.scatter_plot(columns=[0, 1, 2], colors=['red', 'blue', 'green'])
+test.line_chart(columns=[0, 1, 2], colors=['red', 'blue', 'green'])
