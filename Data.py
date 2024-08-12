@@ -54,6 +54,9 @@ class Data():
     def quantile(self, column, qt) -> float:
         return np.quantile(self.dataset.iloc[:, column], qt)
     
+    def iqr(self, column) -> float:
+        return self.quantile(column, 0.75) - self.quantile(column, 0.25)
+    
     # Single Variable vs. Result
     def scatter_plot(self, columns: List[int], title: str = '', xlabel: str = '', ylabel: str = '', colors: List[str] = ['red']*99) -> None:
         if len(columns) > len(colors):
