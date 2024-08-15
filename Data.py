@@ -105,28 +105,3 @@ class Data():
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
         plt.show()
-
-test = Data('50_Startups.csv')
-
-print("Basic Measure")
-print("Min: " + str(test.min(0)))
-print("Max: " + str(test.max(0)))
-print("Mode: " + str(test.mode(0)))
-
-print("\nCentral Measure")
-print("Mean: " + str(test.mean(0)))
-print("Median: " + str(test.median(0)))
-
-print("\nDispersion Measure")
-print("Range: " + str(test.range(0)))
-print("Standard Deviation: " + str(test.std(0)))
-print("Variance: " + str(test.var(0)))
-
-print("\nQuartile")
-print("Q1: " + str(test.quantile(0, 0.25)))
-print("Q2: " + str(test.quantile(0, 0.5)))
-print("Q3: " + str(test.quantile(0, 0.75)))
-
-test.scatter_plot(columns=[0, 1, 2], colors=['red', 'blue', 'green'])
-test.line_chart(columns=[0, 1, 2], colors=['red', 'blue', 'green'])
-test.box_plot(column=0)
