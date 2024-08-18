@@ -2,23 +2,30 @@ from classes.Data import Data
 from tkinter import *
 from tkinter import filedialog
 
-def show_frame(frame):
+def show_frame(frame) -> None:
     frame.tkraise()
 
-def validate_input(new_value):                          # Validation function to allow only numbers
+def validate_input(new_value) -> bool:                                                                                              # Validation function to allow only numbers
     if new_value == "" or new_value.isdigit():
         return True
     else:
         return False
 
-def openFile() -> bool:
+def openFile() -> None:
+    global ds
     filepath = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")])
     if filepath:
-        dataset = Data(filepath)
+        ds = Data(filepath)
 
-def getColumnValue(e: Entry):
-    global columnVal
-    columnVal = e.get()
+def setColValue() -> None:
+    global colVal
+    colVal = int(column_input.get())
+
+def setQtVal() -> None:
+    global qtVal
+    if int(qnt_input.get()) <= 0 or int(qnt_input.get()) >= 100:
+        raise ValueError("Quantile value must be between 0 and 100.")
+    qtVal = int(qnt_input.get())/100
 
 # Tkinter Setup
 title_font = ('Bold', 13)
@@ -67,15 +74,46 @@ select_file_button.pack(expand=True)
 desc_title = Label(basic_desc_page, text="Basic Description Page", font=title_font)
 desc_title.pack(pady=15)
 
+validate_command = basic_desc_page.register(validate_input)                                                                         # Validate input (make sure it is a digit)
+
 column_label = Label(basic_desc_page, text="Enter Column:")
 column_label.pack()
-
-validate_command = basic_desc_page.register(validate_input)                                                                         # Validate input (make sure it is a digit)
 column_input = Entry(basic_desc_page, validate="key", validatecommand=(validate_command, '%P'),width=13, justify="center")
 column_input.pack()
 
-submit_column_btn = Button(basic_desc_page, text="Submit", command=lambda: getColumnValue(column_input))                            # Input stored as 'columnVal'
+qnt_label = Label(basic_desc_page, text="Enter Quantile (in %):")
+qnt_label.pack()
+qnt_input = Entry(basic_desc_page, validate="key", validatecommand=(validate_command, '%P'),width=13, justify="center")
+qnt_input.pack()
+
+submit_column_btn = Button(basic_desc_page, text="Submit", command=lambda: set_basic_desc_vals())                                   # Input stored as 'colVal'
 submit_column_btn.pack(pady=10)
+
+def set_basic_desc_vals() -> None:                                                                                                  # Get all basic statistical description values  
+    global basic_vals
+    global colVal
+    global qtVal
+
+    basic_vals = {'min': 0, 'max': 0, 'mean': 0, 'mode': 0, 'median': 0, 'range': 0, 'std': 0, 'var': 0, 'quantile': 0, 'iqr': 0}
+
+    setColValue()
+    setQtVal()
+
+    if colVal < 0 or colVal >= len(ds.dataset.columns):
+        raise IndexError("Column does not exist.")
+    
+    basic_vals['min'] = ds.min(column=colVal)
+    basic_vals['max'] = ds.max(column=colVal)
+    basic_vals['mean'] = ds.mean(column=colVal)
+    basic_vals['mode'] = ds.mode(column=colVal)
+    basic_vals['median'] = ds.median(column=colVal)
+    basic_vals['range'] = ds.range(column=colVal)
+    basic_vals['std'] = ds.std(column=colVal)
+    basic_vals['var'] = ds.var(column=colVal)
+    basic_vals['quantile'] = ds.quantile(column=colVal, qt=qtVal)
+    basic_vals['iqr'] = ds.iqr(column=colVal)
+
+    print(basic_vals)
 
 # Page 3 (Graphs)
 graph_title = Label(graph_page, text="Graphs", font=title_font)
