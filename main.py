@@ -29,6 +29,7 @@ def setQtVal() -> None:
 
 # Tkinter Setup
 title_font = ('Bold', 13)
+basic_desc_font = ('Times', 12)
 
 root = Tk()
 root.geometry("900x600") 
@@ -72,7 +73,7 @@ select_file_button.pack(expand=True)
 
 # Page 2 (Basic Descriptions)
 desc_title = Label(basic_desc_page, text="Basic Description Page", font=title_font)
-desc_title.pack(pady=15)
+desc_title.pack(pady=10)
 
 validate_command = basic_desc_page.register(validate_input)                                                                         # Validate input (make sure it is a digit)
 
@@ -89,12 +90,57 @@ qnt_input.pack()
 submit_column_btn = Button(basic_desc_page, text="Submit", command=lambda: set_basic_desc_vals())                                   # Input stored as 'colVal'
 submit_column_btn.pack(pady=10)
 
+centralFrame = Frame(basic_desc_page)                                                                                               # Set up Label widgets for cetral measure
+max_desc = Label(centralFrame, text="MAX:\n0", font=basic_desc_font)
+min_desc = Label(centralFrame, text="MIN:\n0", font=basic_desc_font)
+mean_desc = Label(centralFrame, text="MEAN:\n0", font=basic_desc_font)
+median_desc = Label(centralFrame, text="MEDIAN:\n0", font=basic_desc_font)
+mode_desc = Label(centralFrame, text="MODE:\n0", font=basic_desc_font)
+
+centralMeasures = [max_desc, min_desc, mean_desc, median_desc, mode_desc]
+for measure in centralMeasures:
+    measure.pack(side="left", padx=30, pady=10)
+centralFrame.pack()
+
+dispersionFrame = Frame(basic_desc_page)                                                                                            # Set up Label widgets for dispersion measure
+range_desc = Label(dispersionFrame, text="RANGE:\n0", font=basic_desc_font)
+std_desc = Label(dispersionFrame, text="STD:\n0", font=basic_desc_font)
+var_desc = Label(dispersionFrame, text="VARIABILITY:\n0", font=basic_desc_font)
+
+dispersionMeasures = [range_desc, std_desc, var_desc]
+for measure in dispersionMeasures:
+    measure.pack(side="left", padx=30, pady=10)
+dispersionFrame.pack()
+
+quantileFrame = Frame(basic_desc_page)                                                                                              # Set up Label widgets for quantile measure
+qt_desc = Label(quantileFrame, text="QUANTILE:\n0", font=basic_desc_font)
+iqr_desc = Label(quantileFrame, text="IQR:\n0", font=basic_desc_font)
+
+qtMeasures = [qt_desc, iqr_desc]
+for measure in qtMeasures:
+    measure.pack(side="left", padx=30, pady=10)
+quantileFrame.pack()
+
+def update_basic_desc():
+    global basic_vals
+
+    max_desc.config(text="MAX:\n" + str(basic_vals['max']))
+    min_desc.config(text="MIN:\n" + str(basic_vals['min']))
+    mean_desc.config(text="MEAN:\n" + str(basic_vals['mean']))
+    median_desc.config(text="MEDIAN:\n" + str(basic_vals['median']))
+    mode_desc.config(text="MODE:\n" + str(basic_vals['mode']))
+    range_desc.config(text="RANGE:\n" + str(basic_vals['range']))
+    std_desc.config(text="STD:\n" + str(basic_vals['std']))
+    var_desc.config(text="VAR:\n" + str(basic_vals['var']))
+    qt_desc.config(text="QUANTILE:\n" + str(basic_vals['quantile']))
+    iqr_desc.config(text="IQR:\n" + str(basic_vals['iqr']))
+
 def set_basic_desc_vals() -> None:                                                                                                  # Get all basic statistical description values  
     global basic_vals
     global colVal
     global qtVal
 
-    basic_vals = {'min': 0, 'max': 0, 'mean': 0, 'mode': 0, 'median': 0, 'range': 0, 'std': 0, 'var': 0, 'quantile': 0, 'iqr': 0}
+    basic_vals = {'min': 0, 'max': 0, 'mean': 0, 'median': 0, 'mode': 0, 'range': 0, 'std': 0, 'var': 0, 'quantile': 0, 'iqr': 0}
 
     setColValue()
     setQtVal()
@@ -105,15 +151,16 @@ def set_basic_desc_vals() -> None:                                              
     basic_vals['min'] = ds.min(column=colVal)
     basic_vals['max'] = ds.max(column=colVal)
     basic_vals['mean'] = ds.mean(column=colVal)
-    basic_vals['mode'] = ds.mode(column=colVal)
     basic_vals['median'] = ds.median(column=colVal)
+    basic_vals['mode'] = ds.mode(column=colVal)
     basic_vals['range'] = ds.range(column=colVal)
     basic_vals['std'] = ds.std(column=colVal)
     basic_vals['var'] = ds.var(column=colVal)
     basic_vals['quantile'] = ds.quantile(column=colVal, qt=qtVal)
     basic_vals['iqr'] = ds.iqr(column=colVal)
 
-    print(basic_vals)
+    update_basic_desc() 
+    print(basic_vals)   
 
 # Page 3 (Graphs)
 graph_title = Label(graph_page, text="Graphs", font=title_font)
