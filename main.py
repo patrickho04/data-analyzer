@@ -17,15 +17,15 @@ def openFile() -> None:
     if filepath:
         ds = Data(filepath)
 
-def setColValue() -> None:
-    global colVal
-    colVal = int(column_input.get())
-
 def setQtVal() -> None:
     global qtVal
     if int(qnt_input.get()) <= 0 or int(qnt_input.get()) >= 100:
         raise ValueError("Quantile value must be between 0 and 100.")
     qtVal = int(qnt_input.get())/100
+
+def showError(page, errMessage: str) -> None:
+    errLabel = Label(page, text=errMessage, fg="red")
+    errLabel.pack()
 
 # Tkinter Setup
 title_font = ('Bold', 13)
@@ -77,18 +77,18 @@ desc_title.pack(pady=10)
 
 validate_command = basic_desc_page.register(validate_input)                                                                         # Validate input (make sure it is a digit)
 
-column_label = Label(basic_desc_page, text="Enter Column:")
-column_label.pack()
-column_input = Entry(basic_desc_page, validate="key", validatecommand=(validate_command, '%P'),width=13, justify="center")
-column_input.pack()
+colVal_label = Label(basic_desc_page, text="Enter Column:")
+colVal_label.pack()
+colVal_input = Entry(basic_desc_page, validate="key", validatecommand=(validate_command, '%P'),width=13, justify="center")
+colVal_input.pack()
 
 qnt_label = Label(basic_desc_page, text="Enter Quantile (in %):")
 qnt_label.pack()
 qnt_input = Entry(basic_desc_page, validate="key", validatecommand=(validate_command, '%P'),width=13, justify="center")
 qnt_input.pack()
 
-submit_column_btn = Button(basic_desc_page, text="Submit", command=lambda: set_basic_desc_vals())                                   # Input stored as 'colVal'
-submit_column_btn.pack(pady=10)
+submit_colVal_btn = Button(basic_desc_page, text="Submit", command=lambda: set_basic_desc_vals())                                   # Input stored as 'colVal'
+submit_colVal_btn.pack(pady=10)
 
 centralFrame = Frame(basic_desc_page)                                                                                               # Set up Label widgets for cetral measure
 max_desc = Label(centralFrame, text="MAX:\n0", font=basic_desc_font)
@@ -120,6 +120,10 @@ qtMeasures = [qt_desc, iqr_desc]
 for measure in qtMeasures:
     measure.pack(side="left", padx=30, pady=10)
 quantileFrame.pack()
+
+def setColValue() -> None:
+    global colVal
+    colVal = int(colVal_input.get())
 
 def update_basic_desc():
     global basic_vals
@@ -165,6 +169,19 @@ def set_basic_desc_vals() -> None:                                              
 # Page 3 (Graphs)
 graph_title = Label(graph_page, text="Graphs", font=title_font)
 graph_title.pack(pady=15)
+
+colList_label = Label(graph_page, text="Enter Column(s):")
+colList_label.pack()
+colList_input = Entry(graph_page, validate="key", validatecommand=(validate_command, '%P'),width=13, justify="center")
+colList_input.pack()
+
+submit_colList_btn = Button(graph_page, text="Submit", command=lambda: setColList())                                                # Input stored as 'colList'
+submit_colList_btn.pack(pady=10)
+
+def setColList():   # change to list
+    global colList
+    colList = int(colList_input.get())
+    print(colList)  # int   
 
 show_frame(select_file_page)
 root.mainloop()  
