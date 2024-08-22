@@ -5,8 +5,16 @@ from tkinter import filedialog
 def show_frame(frame) -> None:
     frame.tkraise()
 
-def validate_input(new_value) -> bool:                                                                                              # Validation function to allow only numbers
+def validate_input_digit(new_value) -> bool:                                                                                        # Validation function to allow only numbers
+    # Allow only numbers
     if new_value == "" or new_value.isdigit():
+        return True
+    else:
+        return False
+
+def validate_input_list(char):
+    # Allow only numbers and spaces
+    if char.isdigit() or char == " ":
         return True
     else:
         return False
@@ -22,10 +30,6 @@ def setQtVal() -> None:
     if int(qnt_input.get()) <= 0 or int(qnt_input.get()) >= 100:
         raise ValueError("Quantile value must be between 0 and 100.")
     qtVal = int(qnt_input.get())/100
-
-def showError(page, errMessage: str) -> None:
-    errLabel = Label(page, text=errMessage, fg="red")
-    errLabel.pack()
 
 # Tkinter Setup
 title_font = ('Bold', 13)
@@ -75,16 +79,16 @@ select_file_button.pack(expand=True)
 desc_title = Label(basic_desc_page, text="Basic Description Page", font=title_font)
 desc_title.pack(pady=10)
 
-validate_command = basic_desc_page.register(validate_input)                                                                         # Validate input (make sure it is a digit)
+basic_validate_command = basic_desc_page.register(validate_input_digit)                                                                   # Validate input (make sure it is a digit)
 
 colVal_label = Label(basic_desc_page, text="Enter Column:")
 colVal_label.pack()
-colVal_input = Entry(basic_desc_page, validate="key", validatecommand=(validate_command, '%P'),width=13, justify="center")
+colVal_input = Entry(basic_desc_page, validate="key", validatecommand=(basic_validate_command, '%P'),width=13, justify="center")
 colVal_input.pack()
 
 qnt_label = Label(basic_desc_page, text="Enter Quantile (in %):")
 qnt_label.pack()
-qnt_input = Entry(basic_desc_page, validate="key", validatecommand=(validate_command, '%P'),width=13, justify="center")
+qnt_input = Entry(basic_desc_page, validate="key", validatecommand=(basic_validate_command, '%P'),width=13, justify="center")
 qnt_input.pack()
 
 submit_colVal_btn = Button(basic_desc_page, text="Submit", command=lambda: set_basic_desc_vals())                                   # Input stored as 'colVal'
@@ -170,9 +174,11 @@ def set_basic_desc_vals() -> None:                                              
 graph_title = Label(graph_page, text="Graphs", font=title_font)
 graph_title.pack(pady=15)
 
+graph_validate_command = basic_desc_page.register(validate_input_list)
+
 colList_label = Label(graph_page, text="Enter Column(s):")
 colList_label.pack()
-colList_input = Entry(graph_page, validate="key", validatecommand=(validate_command, '%P'),width=13, justify="center")
+colList_input = Entry(graph_page, validate="key", validatecommand=(graph_validate_command, '%S'),width=13, justify="center")
 colList_input.pack()
 
 submit_colList_btn = Button(graph_page, text="Submit", command=lambda: setColList())                                                # Input stored as 'colList'
@@ -180,8 +186,9 @@ submit_colList_btn.pack(pady=10)
 
 def setColList():   # change to list
     global colList
-    colList = int(colList_input.get())
-    print(colList)  # int   
+    colList = colList_input.get().split()
+    colList = [int(item) for item in colList]
+    print(colList)
 
 show_frame(select_file_page)
 root.mainloop()  
