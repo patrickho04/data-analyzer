@@ -172,6 +172,7 @@ class GraphPage(Frame):
 
         graph_validate_command = self.register(validate_input_digList)
 
+        # Graph inputs
         graphInputFrame = Frame(self)
         colList_label = Label(graphInputFrame, text="Enter Column(s):")
         colList_label.grid(row=0, column=0, padx=7)
@@ -182,19 +183,25 @@ class GraphPage(Frame):
         colorList_label.grid(row=0, column=1, padx=7)
         self.colorList_input = Entry(graphInputFrame, width=13, justify="center")
         self.colorList_input.grid(row=1, column=1, padx=7)
-        graphInputFrame.pack()
+
+        xTitle_label = Label(graphInputFrame, text="X Title:")
+        xTitle_label.grid(row=0, column=2, padx=7)
+        self.xTitle_input = Entry(graphInputFrame, width=13, justify="center")
+        self.xTitle_input.grid(row=1, column=2, padx=7)
 
         graph_options_frame = Frame(self)
         graph_options_frame.pack()
-        scatter_btn = Button(graph_options_frame, text="Scatter Plot", command=lambda: setColorList())
-        line_btn = Button(graph_options_frame, text="Line Graph")
-        box_btn = Button(graph_options_frame, text="Box Plot")
+        scatter_btn = Button(graph_options_frame, text="Scatter Plot",
+                             command=lambda: (setColList(), setColorList(), setXTitle(), ds.scatter_plot(columns=colList, colors=colorList, xlabel=xTitle)))
+        line_btn = Button(graph_options_frame, text="Line Graph",
+                          command=lambda: (setColList(), setColorList(), setXTitle(), ds.line_chart(columns=colList, colors=colorList, xlabel=xTitle)))
+        box_btn = Button(graph_options_frame, text="Box Plot", command=lambda: (setColList(), setXTitle(), ds.box_plot(column=colList[0], xlabel=xTitle)))
 
         graph_options = [scatter_btn, line_btn, box_btn]
 
         for option in graph_options:
             option.pack(side="left", padx=10, pady=10)
-
+        
         def setColList():
             global colList
             colList = clean_string(self.colList_input.get()).split()
@@ -203,7 +210,10 @@ class GraphPage(Frame):
         def setColorList():
             global colorList
             colorList = clean_string(self.colorList_input.get()).split()    # fix (takes in int when not supposed to)
-            print(colorList)
+
+        def setXTitle():
+            global xTitle
+            xTitle = self.xTitle_input.get()
 
 # Helper functions
 def validate_input_digit(char) -> bool:

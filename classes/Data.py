@@ -58,7 +58,7 @@ class Data():
         return self.quantile(column, 0.75) - self.quantile(column, 0.25)
     
     # Single Variable vs. Result
-    def scatter_plot(self, columns: List[int], xlabel: str = '', ylabel: str = '', colors: List[str] = ['red']*99) -> None:
+    def scatter_plot(self, columns: List[int], xlabel: str = '', colors: List[str] = ['red']*99) -> None:
         # Fill color list if it doesn't match amount of columns
         if len(columns) > len(colors):
             dif = len(columns) - len(colors)
@@ -74,10 +74,10 @@ class Data():
             plt.scatter(self.dataset.iloc[:, columns[i]], self.Y, color=colors[i])
 
         plt.xlabel(xlabel)
-        plt.ylabel(ylabel)
+        plt.ylabel(self.dataset.columns[-1])
         plt.show()
     
-    def line_chart(self, columns: List[int], xlabel: str = '', ylabel: str = '', colors: List[str] = ['red']*99) -> None:
+    def line_chart(self, columns: List[int], xlabel: str = '', colors: List[str] = ['red']*99) -> None:
         # Fill color list if it doesn't match amount of columns
         if len(columns) > len(colors):
             dif = len(columns) - len(colors)
@@ -92,7 +92,7 @@ class Data():
             plt.plot(self.dataset.iloc[:, columns[i]], self.Y, color=colors[i])
 
         plt.xlabel(xlabel)
-        plt.ylabel(ylabel)
+        plt.ylabel(self.dataset.columns[-1])
         plt.show()
 
     def bar(self) -> None:
@@ -101,11 +101,11 @@ class Data():
     def hist(self) -> None:
         pass
 
-    def box_plot(self, column, xlabel: str = '', ylabel: str = '') -> None:
+    def box_plot(self, column, xlabel: str = '') -> None:
         if column < 0 or column >= len(self.dataset):
             raise IndexError("Column does not exist.")
         
         plt.boxplot(self.dataset.iloc[:, column])
         plt.xlabel(xlabel)
-        plt.ylabel(ylabel)
+        plt.ylabel(self.dataset.columns[-1])
         plt.show()
