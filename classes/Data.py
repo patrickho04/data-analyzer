@@ -1,8 +1,8 @@
 # Importing the libraries
-from typing import List
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from typing import List
 
 class Data():
     # Initizliaing input and output values of dataset
@@ -59,13 +59,17 @@ class Data():
     
     # Single Variable vs. Result
     def scatter_plot(self, columns: List[int], xlabel: str = '', ylabel: str = '', colors: List[str] = ['red']*99) -> None:
+        # Fill color list if it doesn't match amount of columns
         if len(columns) > len(colors):
-            raise IndexError("Column and color length must be equal.")   
+            dif = len(columns) - len(colors)
+            fill = ['red'] * dif
+            colors = colors + fill
         
         for i in range(len(columns)):
-            if columns[i] >= len(self.X[0]):                                            # check if column listed in columns is an indpendent variable column        
+            # Check if column listed in columns is an indpendent variable column    
+            if columns[i] >= len(self.X[0]):    
                 raise IndexError("Column does not have independent variables.")
-            elif columns[i] < 0:                                                        # check if column exists
+            elif columns[i] < 0:
                 raise IndexError("Column does not exist.")
             plt.scatter(self.dataset.iloc[:, columns[i]], self.Y, color=colors[i])
 
@@ -74,8 +78,11 @@ class Data():
         plt.show()
     
     def line_chart(self, columns: List[int], xlabel: str = '', ylabel: str = '', colors: List[str] = ['red']*99) -> None:
+        # Fill color list if it doesn't match amount of columns
         if len(columns) > len(colors):
-            raise IndexError("Column and color length must be equal.")
+            dif = len(columns) - len(colors)
+            fill = ['red'] * dif
+            colors = colors + fill
 
         for i in range(len(columns)):
             if columns[i] >= len(self.X[0]):

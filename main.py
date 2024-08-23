@@ -170,34 +170,57 @@ class GraphPage(Frame):
         graph_title = Label(self, text="Graphs", font=title_font)
         graph_title.pack(pady=15)
 
-        graph_validate_command = self.register(validate_input_list)
+        graph_validate_command = self.register(validate_input_digList)
 
-        colList_label = Label(self, text="Enter Column(s):")
-        colList_label.pack()
-        self.colList_input = Entry(self, validate="key", validatecommand=(graph_validate_command, '%S'), width=13, justify="center")
-        self.colList_input.pack()
+        graphInputFrame = Frame(self)
+        colList_label = Label(graphInputFrame, text="Enter Column(s):")
+        colList_label.grid(row=0, column=0, padx=7)
+        self.colList_input = Entry(graphInputFrame, validate="key", validatecommand=(graph_validate_command, '%S'), width=13, justify="center")
+        self.colList_input.grid(row=1, column=0, padx=7)
 
-        colorList_label = Label(self, text="Enter Color(s):")
-        colorList_label.pack()
-        self.colorList_input = Entry(self, width=13, justify="center")
-        self.colorList_input.pack()
+        colorList_label = Label(graphInputFrame, text="Enter Color(s):")
+        colorList_label.grid(row=0, column=1, padx=7)
+        self.colorList_input = Entry(graphInputFrame, width=13, justify="center")
+        self.colorList_input.grid(row=1, column=1, padx=7)
+        graphInputFrame.pack()
 
         graph_options_frame = Frame(self)
         graph_options_frame.pack()
-        scatter_btn = Button(graph_options_frame, text="Scatter Plot")
+        scatter_btn = Button(graph_options_frame, text="Scatter Plot", command=lambda: setColorList())
         line_btn = Button(graph_options_frame, text="Line Graph")
+        box_btn = Button(graph_options_frame, text="Box Plot")
 
-        graph_options = [scatter_btn, line_btn]
+        graph_options = [scatter_btn, line_btn, box_btn]
 
         for option in graph_options:
             option.pack(side="left", padx=10, pady=10)
 
-# Helper functions
-def validate_input_digit(new_value) -> bool:
-    return new_value == "" or new_value.isdigit()
+        def setColList():
+            global colList
+            colList = clean_string(self.colList_input.get()).split()
+            colList = [int(item) for item in colList]
 
-def validate_input_list(char):
+        def setColorList():
+            global colorList
+            colorList = clean_string(self.colorList_input.get()).split()    # fix (takes in int when not supposed to)
+            print(colorList)
+
+# Helper functions
+def validate_input_digit(char) -> bool:
+    # Only digits
+    return char == "" or char.isdigit()
+
+def validate_input_digList(char):
+    # Only digits and spaces
     return char.isdigit() or char == " "
+
+def validate_input_str(char) -> bool:
+    #Only letters and spaces
+    return char.isalpha() or char.isspace()          
+
+def clean_string(string):
+    # Split string by whitespace and join with a single space
+    return ' '.join(string.split())
 
 if __name__ == "__main__":
     app = MainApp()
