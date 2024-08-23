@@ -23,7 +23,7 @@ class MainApp(Tk):
         self.frames = {}
 
         # Loop to initialize pages
-        for F in (SelectFilePage, BasicDescPage, GraphPage, RegressionPage):
+        for F in (SelectFilePage, BasicDescPage, GraphPage, PreprocessPage):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -36,9 +36,9 @@ class MainApp(Tk):
         select_file_option = Button(navbar, text="Select File", command=lambda: self.show_frame("SelectFilePage"))
         basic_desc_option = Button(navbar, text="Basic Desc.", command=lambda: self.show_frame("BasicDescPage"))
         graph_option = Button(navbar, text="Graphs", command=lambda: self.show_frame("GraphPage"))
-        regression_option = Button(navbar, text="Regression", command=lambda: self.show_frame("RegressionPage"))
+        preprocess_option = Button(navbar, text="Preprocess", command=lambda: self.show_frame("PreprocessPage"))
 
-        options = [select_file_option, basic_desc_option, graph_option, regression_option]
+        options = [select_file_option, basic_desc_option, graph_option, preprocess_option]
 
         for option in options:
             option.pack(side="left", padx=10, pady=10)
@@ -217,13 +217,13 @@ class GraphPage(Frame):
             global xTitle
             xTitle = self.xTitle_input.get()
 
-class RegressionPage(Frame):
+class PreprocessPage(Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.controller = controller
 
         title_font = ('Bold', 13)
-        graph_title = Label(self, text="Regression Models", font=title_font)
+        graph_title = Label(self, text="Preprocess Data", font=title_font)
         graph_title.pack(pady=15)
 
 # Helper functions
