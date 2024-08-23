@@ -188,6 +188,7 @@ class GraphPage(Frame):
         xTitle_label.grid(row=0, column=2, padx=7)
         self.xTitle_input = Entry(graphInputFrame, width=13, justify="center")
         self.xTitle_input.grid(row=1, column=2, padx=7)
+        graphInputFrame.pack()
 
         graph_options_frame = Frame(self)
         graph_options_frame.pack()
@@ -201,7 +202,7 @@ class GraphPage(Frame):
 
         for option in graph_options:
             option.pack(side="left", padx=10, pady=10)
-        
+
         def setColList():
             global colList
             colList = clean_string(self.colList_input.get()).split()
