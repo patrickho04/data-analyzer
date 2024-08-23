@@ -15,14 +15,6 @@ class Data():
         self.max_data = self.dataset.max()
         self.min_data = self.dataset.min()
 
-        # Central Measure
-        self.mean_data = self.dataset.mean()
-        self.median_data = self.dataset.median()
-
-        # Dispersion Measure
-        self.std_data = self.dataset.std()
-        self.var_data = self.dataset.var()
-
     # Basic Measure
     def min(self, column) -> float:
         return self.min_data.iloc[column]
@@ -32,23 +24,23 @@ class Data():
 
     # Central Measure
     def mean(self, column) -> float:
-        return self.mean_data.iloc[column]
+        return self.dataset.mean().iloc[column]
 
     def mode(self, column) -> float:
         return self.dataset.iloc[:, column].mode()[0]
 
     def median(self, column) -> float:
-        return self.median_data.iloc[column]
+        return self.dataset.median().iloc[column]
     
     # Dispersion Measure
     def range(self, column) -> float:
         return self.max_data.iloc[column] - self.min_data.iloc[column]
     
     def std(self, column) -> float:
-        return self.std_data.iloc[column]
+        return self.dataset.std().iloc[column]
 
     def var(self, column) -> float:
-        return self.var_data.iloc[column]
+        return self.dataset.var().iloc[column]
     
     # Quartile
     def quantile(self, column, qt) -> float:
