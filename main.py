@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import filedialog
 from classes.Data import Data
+from classes.PreprocessData import PreprocessData
 
 class MainApp(Tk):
     def __init__(self):
@@ -63,7 +64,7 @@ class SelectFilePage(Frame):
         global ds
         filepath = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")])
         if filepath:
-            ds = Data(filepath)
+            ds = PreprocessData(filepath)
 
 class BasicDescPage(Frame):
     def __init__(self, parent, controller):
@@ -223,8 +224,27 @@ class PreprocessPage(Frame):
         self.controller = controller
 
         title_font = ('Bold', 13)
-        graph_title = Label(self, text="Preprocess Data", font=title_font)
-        graph_title.pack(pady=15)
+        preprocess_title = Label(self, text="Preprocess Data", font=title_font)
+        preprocess_title.pack(pady=15)
+
+        # Preprocess input
+        pp_input_label = Label(self, text="Enter paramaters:")
+        pp_input_label.pack()
+        pp_input = Entry(self)
+        pp_input.pack()
+
+        ppOptionsFrame = Frame(self)
+        replace_missing_data = Button(self, text="Replace Missing Data", command=lambda: (setPpList(), ds.replace_missing_data(lower=ppList[0], upper=ppList[1])))
+
+        pp_options = [replace_missing_data]
+
+        for btn in pp_options:
+            btn.pack(pady=10)
+
+        def setPpList():
+            global ppList
+            ppList = clean_string(pp_input.get()).split()
+            ppList = [int(item) if item.isdigit() else item for item in ppList]
 
 # Helper functions
 def validate_input_digit(char) -> bool:

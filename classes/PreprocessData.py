@@ -1,5 +1,5 @@
-from Data import Data
 import numpy as np
+from classes.Data import Data
 from sklearn.impute import SimpleImputer
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder
@@ -11,23 +11,24 @@ from sklearn.preprocessing import StandardScaler
 class PreprocessData(Data):
     def __init__(self, csv_file):
         super().__init__(csv_file=csv_file)
-        self.dataset = np.array(self.dataset)
+        column_names = np.array(self.dataset.columns)
+        self.npdataset = np.array(self.dataset)
 
     def replace_missing_data(self, lower:int, upper:int) -> None:
         imputer = SimpleImputer(missing_values=np.nan, strategy='mean')
-        imputer.fit(self.dataset[:, lower:upper])
-        self.dataset[:, lower:upper] = imputer.transform(self.dataset[:, lower:upper])
+        imputer.fit(self.npdataset[:, lower:upper])
+        self.npdataset[:, lower:upper] = imputer.transform(self.npdataset[:, lower:upper])
     
     def one_hot_encode(self, column: int) -> None:
         ct = ColumnTransformer(transformers=[('encoder', OneHotEncoder(), [column])], remainder='passthrough')
-        self.dataset = np.array(ct.fit_transform(self.dataset))
+        self.npdataset = np.array(ct.fit_transform(self.npdataset))
 
     def label_encode(self, column: int) -> None:
         le = LabelEncoder()
-        self.dataset[:, column] = le.fit_transform(self.dataset[:, column])
+        self.npdataset[:, column] = le.fit_transform(self.npdataset[:, column])
     
     def split_train_test(self) -> None:
-        self.x_train, self.x_test, self.y_train, self.y_test = train_test_split(self.dataset[:, :-1], self.dataset[:, -1], test_size=0.2, random_state=1)
+        self.x_train, self.x_test, self.y_train, self.y_test = train_test_split(self.npdataset[:, :-1], self.npdataset[:, -1], test_size=0.2, random_state=1)
     
     def standardize(self, list: str, lower: int, upper: int=None) -> None:
         if list not in ('x', 'y'):
