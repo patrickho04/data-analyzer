@@ -234,12 +234,23 @@ class PreprocessPage(Frame):
         pp_input.pack()
 
         ppOptionsFrame = Frame(self)
-        replace_missing_data = Button(self, text="Replace Missing Data", command=lambda: (setPpList(), ds.replace_missing_data(lower=ppList[0], upper=ppList[1])))
+        replace_missing_data_btn = Button(ppOptionsFrame, text="Replace Missing Data (lower, upper)",
+                                      command=lambda: (setPpList(), ds.replace_missing_data(lower=ppList[0], upper=ppList[1])))
+        one_hot_encode_btn = Button(ppOptionsFrame, text="One Hot Encode (column)",
+                                    command=lambda: (setPpList(), ds.one_hot_encode(column=ppList[0])))
+        label_encode_btn = Button(ppOptionsFrame, text="Label Encode (lower, upper)",
+                                  command=lambda: (setPpList(), ds.label_encode(column=ppList[0])))
+        split_sets_btn = Button(ppOptionsFrame, text="Split Sets ()",
+                                command=lambda: (setPpList(), ds.split_train_test()))
+        standardize_btn = Button(ppOptionsFrame, text="Standardize (list, lower, upper)",
+                                 command=lambda: (setPpList(), ds.standardize(ppList[0], ppList[1], ppList[2])))
 
-        pp_options = [replace_missing_data]
+        pp_options = [replace_missing_data_btn, one_hot_encode_btn, label_encode_btn, standardize_btn]
 
         for btn in pp_options:
-            btn.pack(pady=10)
+            btn.pack(padx=7, pady=10, side=LEFT)
+        
+        ppOptionsFrame.pack()
 
         def setPpList():
             global ppList

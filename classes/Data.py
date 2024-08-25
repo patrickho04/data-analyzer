@@ -87,12 +87,6 @@ class Data():
         plt.ylabel(self.dataset.columns[-1])
         plt.show()
 
-    def bar(self) -> None:
-        pass
-
-    def hist(self) -> None:
-        pass
-
     def box_plot(self, column, xlabel: str = '') -> None:
         if column < 0 or column >= len(self.dataset):
             raise IndexError("Column does not exist.")
