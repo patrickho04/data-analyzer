@@ -1,5 +1,7 @@
+import csv
 from tkinter import *
 from tkinter import filedialog
+from tkinter import ttk
 from classes.Data import Data
 from classes.PreprocessData import PreprocessData
 
@@ -58,13 +60,31 @@ class SelectFilePage(Frame):
         select_title.pack(pady=15)
 
         select_file_button = Button(self, text="Select File", command=self.open_file)
-        select_file_button.pack(expand=True)
+        select_file_button.pack(pady=15)
+
+        self.tree = ttk.Treeview(self, show="headings")
+        self.tree.pack(padx=20, pady=20, fill="both", expand=True)
+    
+    def display_csv_file(self,file_path):
+        with open(file_path, 'r', newline='') as file:
+            csv_reader = csv.reader(file)
+            header = next(csv_reader)  # Read the header row
+            self.tree.delete(*self.tree.get_children())  # Clear the current data
+
+            self.tree["columns"] = header
+            for col in header:
+                self.tree.heading(col, text=col)
+                self.tree.column(col, width=100)
+
+            for row in csv_reader:
+                self.tree.insert("", "end", values=row)
 
     def open_file(self):
         global ds
         filepath = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")])
         if filepath:
             ds = PreprocessData(filepath)
+            self.display_csv_file(filepath)
 
 class BasicDescPage(Frame):
     def __init__(self, parent, controller):
@@ -249,6 +269,10 @@ class PreprocessPage(Frame):
 
         for btn in pp_options:
             btn.pack(padx=7, pady=10, side=LEFT)
+
+        data_display = Frame(self)
+        def display_data():
+            pass
         
         ppOptionsFrame.pack()
 
