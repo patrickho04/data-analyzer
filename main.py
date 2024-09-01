@@ -62,22 +62,22 @@ class SelectFilePage(Frame):
         select_file_button = Button(self, text="Select File", command=self.open_file)
         select_file_button.pack(pady=15)
 
-        self.tree = ttk.Treeview(self, show="headings")
-        self.tree.pack(padx=20, pady=20, fill="both", expand=True)
+        self.selectTree = ttk.Treeview(self, show="headings")
+        self.selectTree.pack(padx=20, pady=20, fill="both", expand=True)
     
     def display_csv_file(self,file_path):
         with open(file_path, 'r', newline='') as file:
             csv_reader = csv.reader(file)
-            header = next(csv_reader)  # Read the header row
-            self.tree.delete(*self.tree.get_children())  # Clear the current data
+            header = next(csv_reader)                                                       # Read the header row
+            self.selectTree.delete(*self.selectTree.get_children())                         # Clear the current data
 
-            self.tree["columns"] = header
+            self.selectTree["columns"] = header
             for col in header:
-                self.tree.heading(col, text=col)
-                self.tree.column(col, width=100)
+                self.selectTree.heading(col, text=col)
+                self.selectTree.column(col, width=100)
 
             for row in csv_reader:
-                self.tree.insert("", "end", values=row)
+                self.selectTree.insert("", "end", values=row)
 
     def open_file(self):
         global ds
@@ -255,31 +255,43 @@ class PreprocessPage(Frame):
 
         ppOptionsFrame = Frame(self)
         replace_missing_data_btn = Button(ppOptionsFrame, text="Replace Missing Data (lower, upper)",
-                                      command=lambda: (setPpList(), ds.replace_missing_data(lower=ppList[0], upper=ppList[1])))
+                                      command=lambda: (setPpList(), ds.replace_missing_data(lower=ppList[0], upper=ppList[1]), display_ppdata()))
         one_hot_encode_btn = Button(ppOptionsFrame, text="One Hot Encode (column)",
-                                    command=lambda: (setPpList(), ds.one_hot_encode(column=ppList[0])))
+                                    command=lambda: (setPpList(), ds.one_hot_encode(column=ppList[0]), display_ppdata()))
         label_encode_btn = Button(ppOptionsFrame, text="Label Encode (lower, upper)",
-                                  command=lambda: (setPpList(), ds.label_encode(column=ppList[0])))
+                                  command=lambda: (setPpList(), ds.label_encode(column=ppList[0]), display_ppdata()))
         split_sets_btn = Button(ppOptionsFrame, text="Split Sets ()",
-                                command=lambda: (setPpList(), ds.split_train_test()))
+                                command=lambda: (setPpList(), ds.split_train_test(), display_ppdata()))
         standardize_btn = Button(ppOptionsFrame, text="Standardize (list, lower, upper)",
-                                 command=lambda: (setPpList(), ds.standardize(ppList[0], ppList[1], ppList[2])))
+                                 command=lambda: (setPpList(), ds.standardize(ppList[0], ppList[1], ppList[2]), display_ppdata()))
 
         pp_options = [replace_missing_data_btn, one_hot_encode_btn, label_encode_btn, standardize_btn]
 
         for btn in pp_options:
             btn.pack(padx=7, pady=10, side=LEFT)
 
-        data_display = Frame(self)
-        def display_data():
-            pass
-        
         ppOptionsFrame.pack()
+
+        ppTree = ttk.Treeview(self, show="headings")
+        ppTree.pack(padx=20, pady=20, fill="both", expand=True)
 
         def setPpList():
             global ppList
             ppList = clean_string(pp_input.get()).split()
             ppList = [int(item) if item.isdigit() else item for item in ppList]
+
+        def display_ppdata():
+            ppTree.delete(*ppTree.get_children())
+
+            columns = list(range(ds.npdataset.shape[1]))
+            ppTree["columns"] = columns
+
+            for col in columns:
+                ppTree.heading(col, text=f"Column {col}")
+                ppTree.column(col, width=500)
+
+            for row in ds.npdataset:
+                ppTree.insert("", "end", values=row)
 
 # Helper functions
 def validate_input_digit(char) -> bool:
