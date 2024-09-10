@@ -303,6 +303,16 @@ class RegressionPage(Frame):
         select_title = Label(self, text="Regression Modeling", font=title_font)
         select_title.pack(pady=15)
 
+        regressionOptionsFrame = Frame(self)
+        linear_reg_btn = Button(regressionOptionsFrame, text="Linear Regression")
+
+        reg_options = [linear_reg_btn]
+
+        for btn in reg_options:
+            btn.pack(padx=7, pady=10, side=LEFT)
+
+        regressionOptionsFrame.pack()
+
 # Helper functions
 def validate_input_digit(char) -> bool:
     # Only digits
