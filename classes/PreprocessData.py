@@ -1,5 +1,5 @@
 import numpy as np
-from classes.Data import Data
+from Data import Data
 from sklearn.impute import SimpleImputer
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder
